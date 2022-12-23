@@ -15,7 +15,7 @@ export class Message {
   @Column()
   nickname: string;
 
-  @ManyToOne(type => User, user => user.messages)
+  @ManyToOne(type => User, user => user.messages)  // 一对多
   user: User;
 
   @Column()
