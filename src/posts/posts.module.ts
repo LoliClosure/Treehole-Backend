@@ -9,5 +9,6 @@ import { Module } from "@nestjs/common";
   imports: [TypeOrmModule.forFeature([PostsEntity])],
   controllers: [PostsController],
   providers: [PostsService]
+
 })
 export class PostsModule {}
