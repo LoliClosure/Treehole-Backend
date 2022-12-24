@@ -1,26 +1,76 @@
-## 考拉的 Nest 实战学习系列
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-readme
-中有很多要说的，今天刚开源还没来及更新，晚些慢慢写，其实本人最近半年多没怎么写后端代码，主要在做低代码和中台么内容，操作的也不是原生数据库而是元数据Meta，文中的原生数据库操作也当作复习下，数据库的操作为了同时适合前端和Node开发小伙伴，所以并不是很复杂，但是该有的部分都会讲解，比如多表关联查询，文件存储等等。
 
-## 项目目的
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-1. 希望帮助 Node开发者们熟练掌握 Nest.js 框架，
-2. 帮助想要学习 Node.js 的前端小伙伴们更好的入门一个优秀 Node 框架
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 
-### Nest.js 实战系列一 学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警)
+    <p align="center">
 
-文章地址： https://juejin.cn/post/7032079740982788132
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-![https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69d294713fb048a2bfe43b1e6cac7f4f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp?](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69d294713fb048a2bfe43b1e6cac7f4f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp?)
+## Description
 
-### Nest.js 实战系列二-手把手带你-实现注册、扫码登录、jwt认证等
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-文章地址： https://juejin.cn/post/7032079740982788132
+## Installation
 
-![https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b21bddede0dc4ef29fd97c4e40522211~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp?](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b21bddede0dc4ef29fd97c4e40522211~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp?)
+```bash
+$ npm install
+```
 
-### Nest.js 实战系列三-手把手带你-实现注册、扫码登录、jwt认证等
+## Running the app
 
-文章地址： 首发公众号(后面更新github和掘金)
-![https://user-images.githubusercontent.com/52817889/158059624-06c76d8a-118f-41e0-9d66-c87b59b0a162.png](https://user-images.githubusercontent.com/52817889/158059624-06c76d8a-118f-41e0-9d66-c87b59b0a162.png)
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
