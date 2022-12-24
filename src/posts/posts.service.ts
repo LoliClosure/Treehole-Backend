@@ -33,6 +33,7 @@ export class PostsService {
       isRecommend: isRecommend ? 1 : 0,
       tags: tags,
       author: user,
+
     };
     if (status === 'publish') {
       Object.assign(postParam, {

@@ -29,10 +29,6 @@ export class PostsEntity {
   @Column({ type: 'mediumtext', default: null, name: 'content_html' })
   contentHtml: string;
 
-  // 摘要，自动生成
-  @Column({ type: 'text', default: null })
-  summary: string;
-
   // 阅读量
   @Column({ type: 'int', default: 0 })
   count: number;
@@ -50,7 +46,7 @@ export class PostsEntity {
   status: string;
 
   // 作者
-  @ManyToOne((type) => User, (user) => user.nickname)
+  @ManyToOne((type) => User, (user) => user.openid)
   author: User;
 
   //   @RelationId( (user:User) => user.posts)

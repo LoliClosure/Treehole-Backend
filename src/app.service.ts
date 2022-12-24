@@ -1,17 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ResponseType } from "./utils/response";
 
 @Injectable()
 export class AppService {
-  getHello(): ResponseType {
-    return {
-      code: 0,
-      message: 'Hello World!',
-      data: null,
-    }
+  getHello(): string {
+    console.log('哈哈哈');
+    return 'Hello World!';
   }
-
-
-
 }
-

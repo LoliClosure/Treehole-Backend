@@ -1,23 +1,42 @@
-// use/entities/user.entity.ts
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+import { ApiProperty } from '@nestjs/swagger';
+import { PostsEntity } from 'src/posts/posts.entity';
 
 @Entity('user')
 export class User {
+  @ApiProperty({ description: '用户id' })
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
-  @Column({ length: 100 })
-  username: string; // 用户名
+  @Column({ length: 100, nullable: true })
+  username: string;
 
-  @Column({ length: 100 })
-  nickname: string;  //昵称
+  @Column({ length: 100, nullable: true })
+  nickname: string;
 
-  @Column()
-  password: string;  // 密码
+  @Exclude()
+  @Column({ select: false, nullable: true })
+  password: string;
 
-  @Column()
-  email: string;
+  @Column({ default: null })
+  avatar: string;
 
+  @Column({ default: null })
+  openid: string;
+
+  @Column('enum', { enum: ['root', 'author', 'visitor'], default: 'visitor' })
+  role: string;
+
+  @OneToMany(() => PostsEntity, (post) => post.author)
+  posts: PostsEntity[];
 
   @Column({
     name: 'create_time',
@@ -26,15 +45,10 @@ export class User {
   })
   createTime: Date;
 
-  @Column({
-    name: 'update_time',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updateTime: Date;
 
   @BeforeInsert()
   async encryptPwd() {
-    this.password = await bcrypt.hashSync(this.password);
+    if (!this.password) return;
+    this.password = await bcrypt.hashSync(this.password, 10);
   }
 }

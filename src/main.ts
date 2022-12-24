@@ -1,23 +1,19 @@
+import { TransformInterceptor } from './core/interceptor/transform.interceptor';
+import { HttpExceptionFilter } from './core/filter/http-exception.filter';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
-import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from "@nestjs/common";
-
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.setGlobalPrefix('api'); // 设置全局路由前缀
-  //全局注册拦截器
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.setGlobalPrefix('api'); // 全局路由前缀
   app.useGlobalFilters(new HttpExceptionFilter());
-  // 注册全局错误的过滤器
   app.useGlobalInterceptors(new TransformInterceptor());
 
   app.useGlobalPipes(new ValidationPipe());
 
-  // 设置swagger文档
   const config = new DocumentBuilder()
     .setTitle('管理后台')
     .setDescription('管理后台接口文档')
@@ -26,9 +22,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-
   await app.listen(3000);
-
-
 }
+
 bootstrap();
