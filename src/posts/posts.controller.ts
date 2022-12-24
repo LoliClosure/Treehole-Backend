@@ -1,32 +1,67 @@
-import { PostsRo, PostsService } from './posts.service';
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiTags,ApiOperation } from '@nestjs/swagger';
-import { PostsEntity } from './posts.entity';
-import { CreatePostDto } from "./dto/create-post.dot";
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PostsService } from './posts.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { CreatePostDto, PostsRo } from './dto/post.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles, RolesGuard } from './../auth/role.guard';
 
-
-@ApiTags("文章")
+@ApiTags('文章')
 @Controller('post')
 export class PostsController {
-  constructor(private readonly postsService:PostsService){}
+  constructor(private readonly postsService: PostsService) {}
 
   /**
    * 创建文章
-   * @param post
    */
   @ApiOperation({ summary: '创建文章' })
+  @ApiBearerAuth()
   @Post()
-  async create(@Body() post:CreatePostDto){
-    return await this.postsService.create(post)
+  @Roles('admin', 'root')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async create(@Body() post: CreatePostDto, @Req() req) {
+    return await this.postsService.create(req.user, post);
   }
 
   /**
    * 获取所有文章
    */
   @ApiOperation({ summary: '获取文章列表' })
-  @Get()
-  async findAll(@Query() query):Promise<PostsRo>{
-    return await this.postsService.findAll(query)
+  @Get('/list')
+  async findAll(
+    @Query() query,
+    @Query('pageSize') pageSize: number,
+    @Query('pageNum') pageNum: number,
+  ): Promise<PostsRo> {
+    return await this.postsService.findAll(query);
+  }
+
+  /**
+   * 获取归档列表
+   */
+  @ApiOperation({ summary: '归档日期列表' })
+  @Get('/archives')
+  getArchives() {
+    return this.postsService.getArchives();
+  }
+
+  /**
+   * 获取文章归档
+   */
+  @ApiOperation({ summary: '文章归档' })
+  @Get('/archives/list')
+  getArchiveList(@Query('time') time: string) {
+    return this.postsService.getArchiveList(time);
   }
 
   /**
@@ -35,8 +70,8 @@ export class PostsController {
    */
   @ApiOperation({ summary: '获取指定文章' })
   @Get(':id')
-  async findById(@Param('id') id) {
-    return await this.postsService.findById(id)
+  async findById(@Param('id') id: string) {
+    return await this.postsService.findById(id);
   }
 
   /**
@@ -44,10 +79,12 @@ export class PostsController {
    * @param id
    * @param post
    */
-  @ApiOperation({ summary: '更新文章' })
-  @Put(":id")
-  async update(@Param("id") id, @Body() post){
-    return await this.postsService.updateById(id, post)
+  @ApiOperation({ summary: '更新指定文章' })
+  @ApiBearerAuth()
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('id') id: number, @Body() post: CreatePostDto) {
+    return await this.postsService.updateById(id, post);
   }
 
   /**
@@ -55,8 +92,8 @@ export class PostsController {
    * @param id
    */
   @ApiOperation({ summary: '删除文章' })
-  @Delete("id")
-  async remove(@Param("id") id){
-    return await this.postsService.remove(id)
+  @Delete(':id')
+  async remove(@Param('id') id) {
+    return await this.postsService.remove(id);
   }
 }
