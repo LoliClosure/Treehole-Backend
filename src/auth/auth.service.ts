@@ -3,12 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
-import {
-  AccessConfig,
-  AccessTokenInfo,
-  WechatError,
-  WechatUserInfo,
-} from './auth.interface';
+import { AccessConfig, AccessTokenInfo, WechatError, WechatUserInfo, } from './auth.interface';
 import { lastValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
@@ -41,30 +36,34 @@ export class AuthService {
     if (!code) {
       throw new BadRequestException('请输入微信授权码');
     }
-    await this.getAccessToken(code);
-
-    const user = await this.getUserByOpenid();
-    if (!user) {
-      // 获取用户信息，注册新用户
-      const userInfo: WechatUserInfo = await this.getUserInfo();
-      return this.userService.registerByWechat(userInfo);
+    const userInfo = await this.getUserInfo(code);
+    if (userInfo) {
+      const user = await this.getUserByOpenid(userInfo.openid);
+      if (!user) {
+        const registered = await this.userService.registerByWechat(userInfo);
+        return this.login(registered);
+      }
+      return this.login(user);
     }
-    return this.login(user);
   }
 
   async getUser(user) {
     return await this.userService.findOne(user.id);
   }
 
-  async getUserByOpenid() {
-    return await this.userService.findByOpenid(this.accessTokenInfo.openid);
+  async getUserByOpenid(openid: string) {
+    return await this.userService.findByOpenid(openid);
   }
 
-  async getUserInfo() {
+  async getUserInfo(code: string) {
+    const { APPID, APPSECRET } = process.env;
+    if (!APPSECRET) {
+      throw new BadRequestException('[getAccessToken]必须有appSecret');
+    }
     const result: AxiosResponse<WechatError & WechatUserInfo> =
       await lastValueFrom(
         this.httpService.get(
-          `${this.apiServer}/sns/userinfo?access_token=${this.accessTokenInfo.accessToken}&openid=${this.accessTokenInfo.openid}`,
+          `${this.apiServer}/sns/jscode2session?appid=${APPID}&secret=${APPSECRET}&js_code=${code}&grant_type=authorization_code`,
         ),
       );
     if (result.data.errcode) {
@@ -77,7 +76,7 @@ export class AuthService {
     return result.data;
   }
 
-  async getAccessToken(code) {
+  async getAccessToken() {
     const { APPID, APPSECRET } = process.env;
     if (!APPSECRET) {
       throw new BadRequestException('[getAccessToken]必须有appSecret');
@@ -90,7 +89,7 @@ export class AuthService {
       const res: AxiosResponse<WechatError & AccessConfig, any> =
         await lastValueFrom(
           this.httpService.get(
-            `${this.apiServer}/sns/oauth2/access_token?appid=${APPID}&secret=${APPSECRET}&code=${code}&grant_type=authorization_code`,
+            `${this.apiServer}/cgi-bin/token?appid=${APPID}&secret=${APPSECRET}&grant_type=client_credential`,
           ),
         );
 
@@ -103,7 +102,6 @@ export class AuthService {
         accessToken: res.data.access_token,
         expiresIn: res.data.expires_in,
         getTime: Date.now(),
-        openid: res.data.openid,
       };
     }
 

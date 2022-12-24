@@ -30,15 +30,6 @@ export class AuthController {
     return await this.authService.login(req.user);
   }
 
-  @ApiOperation({ summary: '微信登录跳转' })
-  @Get('wechatLogin')
-  async wechatLogin(@Headers() header, @Res() res) {
-    const APPID = process.env.APPID;
-    const redirectUri = urlencode('http://www.inode.club');
-    res.redirect(
-      `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`,
-    );
-  }
 
   @ApiOperation({ summary: '微信登录' })
   @ApiBody({ type: WechatLoginDto, required: true })

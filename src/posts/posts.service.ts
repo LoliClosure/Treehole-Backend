@@ -26,20 +26,14 @@ export class PostsService {
       throw new HttpException('文章已存在', HttpStatus.BAD_REQUEST);
     }
 
-    const { tag, status, isRecommend } = post;
+    const { tag } = post;
     const tags = await this.tagService.findByIds(('' + tag).split(','));
     const postParam: Partial<PostsEntity> = {
       ...post,
-      isRecommend: isRecommend ? 1 : 0,
       tags: tags,
       author: user,
 
     };
-    if (status === 'publish') {
-      Object.assign(postParam, {
-        publishTime: new Date(),
-      });
-    }
 
     const newPost: PostsEntity = await this.postsRepository.create({
       ...postParam,
@@ -47,6 +41,26 @@ export class PostsService {
     const created = await this.postsRepository.save(newPost);
     return created.id;
   }
+
+  async getMine(currentUser, queryMy): Promise<PostsRo> {
+    const qb = await this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoinAndSelect('post.author', 'user')
+      .orderBy('post.updateTime', 'DESC');
+    qb.where('user.id=:id', { id: currentUser.id });
+    qb.orderBy('post.create_time', 'DESC');
+
+    const count = await qb.getCount();
+    const { pageNum = 1, pageSize = 10, ...params } = queryMy;
+    qb.limit(pageSize);
+    qb.offset(pageSize * (pageNum - 1));
+
+    const posts = await qb.getMany();
+    const result: PostInfoDto[] = posts.map((item) => item.toResponseObject());
+    return { list: result, count: count };
+  }
+
 
   async findAll(query): Promise<PostsRo> {
     const qb = await this.postsRepository
@@ -108,9 +122,7 @@ export class PostsService {
     const tags = await this.tagService.findByIds(('' + tag).split(','));
     const newPost = {
       ...post,
-      isRecommend: post.isRecommend ? 1 : 0,
       tags,
-      publishTime: status === 'publish' ? new Date() : existPost.publishTime,
     };
 
     const updatePost = this.postsRepository.merge(existPost, newPost);

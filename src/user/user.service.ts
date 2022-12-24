@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { WechatUserInfo } from '../auth/auth.interface';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class UserService {
@@ -33,11 +34,12 @@ export class UserService {
   }
 
   async registerByWechat(userInfo: WechatUserInfo) {
-    const { nickname, openid, headimgurl } = userInfo;
+    const { openid } = userInfo;
+    const randomUsername = nanoid(10);
     const newUser = await this.userRepository.create({
-      nickname,
+      nickname: randomUsername,
+      username: randomUsername,
       openid,
-      avatar: headimgurl,
     });
     return await this.userRepository.save(newUser);
   }

@@ -46,6 +46,23 @@ export class PostsController {
     return await this.postsService.findAll(query);
   }
 
+
+  /**
+   * 获取自己的文章
+   */
+  @ApiOperation({ summary: '获取自己的文章' })
+  @Get('/mine' +
+    'ts')
+  async getMine(
+    @Query() queryMy,
+    @Req() req,
+    @Query('pageSize') pageSize: number,
+    @Query('pageNum') pageNum: number,
+    ):Promise<PostsRo> {
+    return await this.postsService.getMine(req.user, queryMy);
+  }
+
+
   /**
    * 获取归档列表
    */

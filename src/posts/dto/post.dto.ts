@@ -9,12 +9,6 @@ export class CreatePostDto {
   @ApiPropertyOptional({ description: '内容' })
   readonly content: string;
 
-  @ApiPropertyOptional({ description: '文章状态' })
-  readonly status: string;
-
-  @ApiPropertyOptional({ description: '是否推荐' })
-  readonly isRecommend: boolean;
-
   @ApiPropertyOptional({ description: '文章标签' })
   readonly tag: string;
 }
@@ -24,10 +18,6 @@ export class PostInfoDto {
   public title: string;
   public content: string;
   public contentHtml: string;
-  public summary: string;
-  public toc: string;
-  public isRecommend: boolean;
-  public status: string;
   public userId: string;
   public author: string;
   public tags: string[];

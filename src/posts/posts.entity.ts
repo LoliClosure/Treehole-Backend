@@ -37,13 +37,6 @@ export class PostsEntity {
   @Column({ type: 'int', default: 0, name: 'like_count' })
   likeCount: number;
 
-  // 推荐显示
-  @Column({ type: 'tinyint', default: 0, name: 'is_recommend' })
-  isRecommend: number;
-
-  // 文章状态
-  @Column('simple-enum', { enum: ['draft', 'publish'] })
-  status: string;
 
   // 作者
   @ManyToOne((type) => User, (user) => user.openid)
@@ -61,9 +54,6 @@ export class PostsEntity {
   })
   tags: TagEntity[];
 
-  @Column({ type: 'timestamp', name: 'publish_time', default: null })
-  publishTime: Date;
-
   @Column({
     type: 'timestamp',
     name: 'create_time',
@@ -73,12 +63,16 @@ export class PostsEntity {
 
   toResponseObject(): PostInfoDto {
     const responseObj: PostInfoDto = {
-      ...this,
-      isRecommend: this.isRecommend ? true : false,
+        id: this.id,
+        title: this.title,
+        content: this.content,
+        contentHtml: this.contentHtml,
+        userId: this.author.openid,
+        author: this.author.nickname,
+        tags: this.tags.map((tag) => tag.name),
+        count: this.count,
+        likeCount: this.likeCount,
     };
-    if (this.tags && this.tags.length) {
-      responseObj.tags = this.tags.map((item) => item.name);
-    }
     if (this.author && this.author.id) {
       responseObj.userId = this.author.id;
       responseObj.author = this.author.nickname || this.author.username;
