@@ -165,4 +165,15 @@ export class PostsService {
     }
     return await this.postsRepository.remove(existPost);
   }
+
+  async likePost(id) {
+    const existPost = await this.postsRepository.findOne(id);
+    if (!existPost) {
+        throw new HttpException(`id为${id}的文章不存在`, HttpStatus.BAD_REQUEST);
+    }
+    const updatePost = await this.postsRepository.merge(existPost, {
+        likeCount: existPost.likeCount + 1,
+    });
+    return this.postsRepository.save(updatePost);
+  }
 }

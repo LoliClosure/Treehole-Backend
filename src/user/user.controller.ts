@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Put,
   Param,
   Patch,
   Post,
@@ -44,18 +45,26 @@ export class UserController {
     return req.user;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  @ApiOperation({ summary: '更新自己的用户信息' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Put()
+  async updateMine(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(req.user.id, updateUserDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.userService.findOne(id);
+  // }
+  //
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //   return this.userService.update(+id, updateUserDto);
+  // }
+  //
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.userService.remove(+id);
+  // }
 }

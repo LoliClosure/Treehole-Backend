@@ -28,7 +28,7 @@ export class PostsController {
   @ApiBearerAuth()
   @Post()
   @Roles('admin', 'root')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'))
   async create(@Body() post: CreatePostDto, @Req() req) {
     return await this.postsService.create(req.user, post);
   }
@@ -51,8 +51,7 @@ export class PostsController {
    * 获取自己的文章
    */
   @ApiOperation({ summary: '获取自己的文章' })
-  @Get('/mine' +
-    'ts')
+  @Get('/mine')
   async getMine(
     @Query() queryMy,
     @Req() req,
@@ -62,24 +61,33 @@ export class PostsController {
     return await this.postsService.getMine(req.user, queryMy);
   }
 
-
   /**
-   * 获取归档列表
+   * 给文章点赞
    */
-  @ApiOperation({ summary: '归档日期列表' })
-  @Get('/archives')
-  getArchives() {
-    return this.postsService.getArchives();
+  @ApiOperation({ summary: '给文章点赞' })
+  @Post('/:id/like')
+  async likePost(@Param('id') id) {
+    return await this.postsService.likePost(id);
   }
 
-  /**
-   * 获取文章归档
-   */
-  @ApiOperation({ summary: '文章归档' })
-  @Get('/archives/list')
-  getArchiveList(@Query('time') time: string) {
-    return this.postsService.getArchiveList(time);
-  }
+
+  // /**
+  //  * 获取归档列表
+  //  */
+  // @ApiOperation({ summary: '归档日期列表' })
+  // @Get('/archives')
+  // getArchives() {
+  //   return this.postsService.getArchives();
+  // }
+  //
+  // /**
+  //  * 获取文章归档
+  //  */
+  // @ApiOperation({ summary: '文章归档' })
+  // @Get('/archives/list')
+  // getArchiveList(@Query('time') time: string) {
+  //   return this.postsService.getArchiveList(time);
+  // }
 
   /**
    * 获取指定文章
