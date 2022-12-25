@@ -51,7 +51,9 @@ export class PostsController {
    * 获取自己的文章
    */
   @ApiOperation({ summary: '获取自己的文章' })
+  @ApiBearerAuth()
   @Get('/mine')
+  @UseGuards(AuthGuard('jwt'))
   async getMine(
     @Query() queryMy,
     @Req() req,

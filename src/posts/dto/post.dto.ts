@@ -23,6 +23,7 @@ export class PostInfoDto {
   public tags: string[];
   public count: number;
   public likeCount: number;
+  public createTime: Date;
 }
 
 export interface PostsRo {

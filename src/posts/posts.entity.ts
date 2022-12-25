@@ -72,6 +72,7 @@ export class PostsEntity {
         tags: this.tags.map((tag) => tag.name),
         count: this.count,
         likeCount: this.likeCount,
+        createTime: this.createTime,
     };
     if (this.author && this.author.id) {
       responseObj.userId = this.author.id;
